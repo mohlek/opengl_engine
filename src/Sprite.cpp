@@ -41,6 +41,9 @@ Sprite::Sprite(const std::shared_ptr<Texture>& texture) : texture(texture) {
 Sprite::~Sprite() {
 }
 
+void Sprite::update(double time) {
+}
+
 void Sprite::render(ShaderProgram& shader) {
   auto unbindHelper = vao->bind();
   auto textureBindHelper = this->texture->bind();

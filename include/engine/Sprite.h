@@ -6,13 +6,15 @@
 
 #include <glm/glm.hpp>
 
+#include "RenderObject.h"
+
 #include "Buffer.h"
 #include "Texture.h"
 #include "VertexArrayObject.h"
 #include "shader/ShaderProgram.h"
 
 namespace Engine {
-  class Sprite {
+  class Sprite : public RenderObject {
     private:
       VertexArrayObjectPtr vao;
       BufferPtr vboPos;
@@ -25,6 +27,7 @@ namespace Engine {
       Sprite(const TexturePtr& texture);
       virtual ~Sprite();
 
+      void update(double time);
       void render(ShaderProgram& shader);
   };
   

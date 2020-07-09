@@ -34,6 +34,8 @@ namespace Engine {
       AnimatedSprite();
       virtual ~AnimatedSprite();
   };
+
+  using AnimatedSpritePtr = std::shared_ptr<Engine::AnimatedSprite>;
 }
 
 #endif
