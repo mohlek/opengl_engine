@@ -3,12 +3,13 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <SDL.h>
 
 namespace Engine {
 
     class Window {
         private:
-            GLFWwindow* window;
+            SDL_Window* window;
             GLFWmonitor* monitor;
             const GLFWvidmode* mode;
             
@@ -29,7 +30,7 @@ namespace Engine {
             int getWidth();
             int getHeight();
 
-            GLFWwindow* getWindowPtr() { return window; }
+            GLFWwindow* getWindowPtr() { return NULL; }
 
             Window(const char* title, int width, int height, bool fullscreen = false);
     };

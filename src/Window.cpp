@@ -8,102 +8,31 @@
 using namespace Engine;
 
 Window::Window(const char* title, int width, int height, bool fullscreen) : title(title), width(width), height(height), fullscreen(fullscreen) {
-    if (!glfwInit()) {
-        fprintf(stderr, "Error: could not init GLFW\n");
-        return;
-    }
-    
-    glfwSetErrorCallback(errorCallback);
+    SDL_Init(SDL_INIT_VIDEO);  
 
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-    glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
-    glfwWindowHint(GLFW_CONTEXT_ROBUSTNESS, GLFW_NO_RESET_NOTIFICATION);    
-    
-    this->monitor = glfwGetPrimaryMonitor();
-    if (!monitor) {
-        throw "Could not get primary monitor";
-    }
-    
-    this->mode = glfwGetVideoMode(this->monitor);
-    
-    if (!this->mode) {
-        throw "Could not get videomode";
-    }
-    
-    glfwWindowHint(GLFW_RED_BITS, this->mode->redBits);
-    glfwWindowHint(GLFW_GREEN_BITS, this->mode->greenBits);
-    glfwWindowHint(GLFW_BLUE_BITS, this->mode->blueBits);
-    glfwWindowHint(GLFW_REFRESH_RATE, this->mode->refreshRate);
-    
-    glfwWindowHint(GLFW_SAMPLES, 8);
 }
 
 void Window::create() {
-    
-    if (!monitor) {
-        fprintf(stderr, "monitor not initialized");
-    }
-
-    if (fullscreen) {
-      this->width = this->mode->width;
-      this->height = this->mode->height;
-    }
-
-    this->window = glfwCreateWindow(this->width, this->height, this->title, NULL, NULL);
-    if (!this->window) {
-        fprintf(stderr, "Could not create window");
-        glfwTerminate();
-        return;
-    }
-   
-    glfwMakeContextCurrent(this->window);
-
-    //glfwMaximizeWindow(this->window);
-
-    glfwSwapInterval(1);
-
-    glewExperimental = GL_TRUE;
-    glewInit();
-    
-    glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB);
-    glDebugMessageControlARB(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, GL_TRUE);
-    glDebugMessageCallbackARB(openGLDebugOutput, NULL);
-
-    const GLubyte* renderer = glGetString(GL_RENDERER); // get renderer string
-    const GLubyte* version = glGetString(GL_VERSION); // version as a string
-    printf("Renderer: %s\n", renderer);
-    printf("OpenGL version supported %s\n", version);
-
-    glEnable(GL_DEPTH_TEST); // enable depth-testing
-    glDepthFunc(GL_LESS); // depth-testing interprets a smaller value as "closer"
-
-    glEnable(GL_MULTISAMPLE);
-
-    glfwSetKeyCallback(this->window, keyCallback);
+      this->window = SDL_CreateWindow("", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 800, 600, 0);
+      SDL_Renderer* renderer = SDL_CreateRenderer(this->window, -1, SDL_RENDERER_SOFTWARE);
+      SDL_RenderClear(renderer);
+      SDL_RenderPresent(renderer);
 }
 
 bool Window::loop() {
-    glfwSwapBuffers(this->window);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glfwPollEvents();
-    
-    return !glfwWindowShouldClose(this->window);
+  return true;
 }
 
 void Window::close() {
     if (this->window) {
-        glfwDestroyWindow(window);
+        SDL_DestroyWindow(this->window);
         window = NULL;
     }
-    glfwTerminate();
+    SDL_Quit();
 }
 
 void Window::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-    fprintf(stdout, "Key %s\n", glfwGetKeyName(key, 0));
+    //fprintf(stdout, "Key %s\n", glfwGetKeyName(key, 0));
 }
 
 int Window::getWidth() {

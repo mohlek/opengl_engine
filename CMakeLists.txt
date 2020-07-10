@@ -31,6 +31,12 @@ if(NOT GLEW_FOUND)
 endif(NOT GLEW_FOUND)
 
 #########################################################
+# FIND SDL
+#########################################################
+find_package(SDL2 REQUIRED)
+include_directories(${SDL2_INCLUDE_DIRS})
+
+#########################################################
 # FIND GLFW
 #########################################################
 find_package(PkgConfig REQUIRED)
@@ -59,5 +65,5 @@ add_library(engine STATIC ${src_engine})
 target_include_directories(engine INTERFACE "${GLM_INCLUDE_DIRS}")
 target_link_libraries(engine INTERFACE ${OPENGL_LIBRARIES}) 
 target_link_libraries(engine INTERFACE ${GLEW_LIBRARIES})
-target_link_libraries(engine INTERFACE ${GLFW_LIBRARIES})
+target_link_libraries(engine INTERFACE ${SDL2_LIBRARIES})
 target_link_libraries(engine INTERFACE ${LIB3DS_LIBRARY})
