@@ -37,20 +37,6 @@ find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
 
 #########################################################
-# FIND GLFW
-#########################################################
-find_package(PkgConfig REQUIRED)
-pkg_search_module(GLFW REQUIRED glfw3)
-#find_package(glfw3 REQUIRED)
-
-include_directories(${GLFW_INCLUDE_DIRS})
-link_directories(${GLFW_LIBRARY_DIRS})
-add_definitions(${GLDFW_DEFINITIONS})
-if(NOT GLFW_FOUND)
-    message(ERROR " GLFW not found!")
-endif(NOT GLFW_FOUND)
-
-#########################################################
 # FIND GLM
 #########################################################
 find_package(GLM REQUIRED)
@@ -63,7 +49,6 @@ endif(NOT GLM_FOUND)
 add_library(engine STATIC ${src_engine})
 
 target_include_directories(engine INTERFACE "${GLM_INCLUDE_DIRS}")
-target_link_libraries(engine INTERFACE ${OPENGL_LIBRARIES}) 
-target_link_libraries(engine INTERFACE ${GLEW_LIBRARIES})
-target_link_libraries(engine INTERFACE ${SDL2_LIBRARIES})
-target_link_libraries(engine INTERFACE ${LIB3DS_LIBRARY})
+target_link_libraries(engine INTERFACE OpenGL::GL) 
+target_link_libraries(engine INTERFACE GLEW::GLEW)
+target_link_libraries(engine INTERFACE SDL2::SDL2)
