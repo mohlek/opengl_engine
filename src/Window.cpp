@@ -8,18 +8,33 @@
 using namespace Engine;
 
 Window::Window(const char* title, int width, int height, bool fullscreen) : title(title), width(width), height(height), fullscreen(fullscreen) {
-    SDL_Init(SDL_INIT_VIDEO);  
+  int error;
+  error = SDL_Init(SDL_INIT_VIDEO);  
+  if (error < 0) {
+    fprintf(stderr, "Unable to initialize SDL");
+    SDL_Quit();
+  }
 
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+
+  SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+  SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 }
 
 void Window::create() {
-      this->window = SDL_CreateWindow("", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 800, 600, 0);
-      SDL_Renderer* renderer = SDL_CreateRenderer(this->window, -1, SDL_RENDERER_SOFTWARE);
-      SDL_RenderClear(renderer);
-      SDL_RenderPresent(renderer);
+  this->window = SDL_CreateWindow("", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
+  if (!this->window) {
+    fprintf(stderr, "Could not create window");
+    SDL_Quit();
+  }
+
+  this->context = SDL_GL_CreateContext(this->window);
+  SDL_GL_SetSwapInterval(1);
 }
 
 bool Window::loop() {
+  SDL_GL_SwapWindow(this->window);
   return true;
 }
 
@@ -29,10 +44,6 @@ void Window::close() {
         window = NULL;
     }
     SDL_Quit();
-}
-
-void Window::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-    //fprintf(stdout, "Key %s\n", glfwGetKeyName(key, 0));
 }
 
 int Window::getWidth() {
