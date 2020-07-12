@@ -23,7 +23,7 @@ namespace Engine {
       BufferPtr vboUV;
     public:
       std::vector<TexturePtr> textures;
-      int index;
+      int index = 0;
       double fps = 60;
 
       float alpha = 1.;
