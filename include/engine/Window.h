@@ -4,8 +4,8 @@
 #include <GL/glew.h>
 
 #ifdef __APPLE__
-#include <SDL/SDL.h>
-#include <SDL/SDL_opengl.h>
+#include <SDL.h>
+#include <SDL_opengl.h>
 #else
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
