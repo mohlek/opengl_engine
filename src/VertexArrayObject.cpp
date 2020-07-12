@@ -8,6 +8,7 @@ VertexArrayObject::VertexArrayObject() {
         return;
     }
     glGenVertexArrays(1, &this->vaoId);
+    auto unbind = bind();
 }
 
 VertexArrayObject::~VertexArrayObject() {

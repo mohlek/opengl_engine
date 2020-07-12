@@ -6,12 +6,16 @@
 using namespace Engine;
 
 Buffer::Buffer(GLenum bufferType, int size = 0) : bufferType(bufferType), size(size) {
+    if (glCreateBuffers) {
+      glCreateBuffers(1, &this->bufferId);
+      return;
+    }
     glGenBuffers(1, &this->bufferId);
+    auto unbind = bind();
 }
 
 Buffer::~Buffer() {
     glDeleteBuffers(1, &this->bufferId);
-    fprintf(stdout, "delete buffer\n");
 }
 
 ExitScopeHelper Buffer::bind() {
