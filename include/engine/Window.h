@@ -1,8 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <GL/glew.h>
+
 #include <SDL.h>
 #include <SDL_opengl.h>
+
 
 namespace Engine {
 
@@ -20,7 +23,7 @@ namespace Engine {
             
             static void openGLDebugOutput(unsigned int source, unsigned int type, unsigned int id, unsigned int severity, int length, const char* message, const void* userParam);
         public:
-            void create();
+            bool create();
             bool loop();
             void close();
 

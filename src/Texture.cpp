@@ -9,6 +9,9 @@ using namespace Engine;
 
 Texture::Texture(GLenum target) : target(target){
   glGenTextures(1, &this->textureId);
+  if (!this->textureId) {
+    fprintf(stderr, "Could not create texture\n");
+  }
 }
 
 Texture::Texture(const char* filename, GLenum target) : Texture(target) {

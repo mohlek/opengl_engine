@@ -3,12 +3,10 @@
 #include <cstring>
 #include <algorithm>
 
-#define MEMCPY
-
 using namespace Engine;
 
 Buffer::Buffer(GLenum bufferType, int size = 0) : bufferType(bufferType), size(size) {
-    glCreateBuffers(1, &this->bufferId);
+    glGenBuffers(1, &this->bufferId);
 }
 
 Buffer::~Buffer() {

@@ -7,34 +7,132 @@
 
 using namespace Engine;
 
+static void GlewInfo() {
+  printf("----------------------OpenGL Info----------------------------\n");
+  printf("Glew Version: %s\n", glewGetString(GLEW_VERSION));
+  printf("     Version: %s\n", glGetString(GL_VERSION));
+  printf("      Vendor: %s\n", glGetString(GL_VENDOR));
+  printf("    Renderer: %s\n", glGetString(GL_RENDERER));
+  printf("     Shading: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
+  printf("----------------------------------------------------------------\n");
+}
+
+void DebugCallbackAMD(GLuint id, GLenum category, GLenum severity,
+                                GLsizei length, const GLchar* message,
+                                GLvoid* userParam) {
+  printf("\nAn OGL AMD error has occured: %s\n", message);
+}
+
+void DebugCallbackARB(GLenum source, GLenum type, GLuint id,
+                                GLenum severity, GLsizei length,
+                                const GLchar* message, GLvoid* userParam) {
+  printf("\nAn OGL ARB error has occured: %s\n", message);
+}
+
+void printOutKhrDebugMessage(GLenum source, GLenum type, GLuint id,
+                                       GLenum severity, GLsizei length,
+                                       const GLchar* message,
+                                       const void* userParam) {
+  printf("\nAn OGL KHR error has occured: %s\n", message);
+}
+
+void CheckGL() {
+  GLenum err;
+  while ((err = glGetError()) != GL_NO_ERROR) {
+    printf("\n A general  OGL error has occured: %i\n", err);
+  }
+}
+
+void GLAPIENTRY
+MessageCallback( GLenum source,
+                 GLenum type,
+                 GLuint id,
+                 GLenum severity,
+                 GLsizei length,
+                 const GLchar* message,
+                 const void* userParam )
+{
+  fprintf( stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
+           ( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ),
+            type, severity, message );
+}
+
 Window::Window(const char* title, int width, int height, bool fullscreen) : title(title), width(width), height(height), fullscreen(fullscreen) {
   int error;
   error = SDL_Init(SDL_INIT_VIDEO);  
   if (error < 0) {
     fprintf(stderr, "Unable to initialize SDL");
     SDL_Quit();
+    return;
   }
 
+  //SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
+  //SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
 
   SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
   SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 }
 
-void Window::create() {
-  this->window = SDL_CreateWindow("", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
+bool Window::create() {
+  this->window = SDL_CreateWindow("", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_OPENGL);
   if (!this->window) {
     fprintf(stderr, "Could not create window");
     SDL_Quit();
+    return false;
   }
 
   this->context = SDL_GL_CreateContext(this->window);
+  if (!this->context) {
+    fprintf(stderr, "Could not create context: %s\n", SDL_GetError());
+    SDL_Quit();
+    return false;
+  }
+
+  glewExperimental = GL_TRUE;
+  SDL_assert(glewInit() == GLEW_OK);
+  glGetError();
+
+  GlewInfo();
+  CheckGL();
+
+  if (GLEW_ARB_debug_output) {
+    printf("Supporting Arb output\n");
+    glEnable(GL_DEBUG_OUTPUT);
+    glDebugMessageCallbackARB((GLDEBUGPROCARB)DebugCallbackARB, 0);
+    CheckGL();
+  }
+
+  if (GLEW_AMD_debug_output) {
+    printf("Supporting AMD output\n");
+    glDebugMessageCallbackAMD((GLDEBUGPROCAMD)DebugCallbackAMD, 0);
+    CheckGL();
+  }
+
+  if (GLEW_KHR_debug) {
+    printf("Supporting KHR output\n");
+    glDebugMessageCallback((GLDEBUGPROC)printOutKhrDebugMessage, 0);
+    CheckGL();
+  }
+
   SDL_GL_SetSwapInterval(1);
+
+  return true;
 }
 
 bool Window::loop() {
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   SDL_GL_SwapWindow(this->window);
+
+  SDL_Event event;
+  if (SDL_PollEvent( & event)) {
+      if (event.type == SDL_QUIT) {
+          return false;
+      }
+  }
+
   return true;
 }
 
@@ -57,83 +155,4 @@ int Window::getHeight() {
 void Window::errorCallback(int error, const char* desc) {
     fprintf(stderr, "Error: %s\n", desc);
     return;
-}
-
-void Window::openGLDebugOutput(unsigned int source, unsigned int type, unsigned int id, unsigned int severity, int length, const char* message, const void* userParam) {
-	
-    // Thanks to Luca :)
-    
-  if (std::string(message, std::string("Buffer detailed info").size()) == "Buffer detailed info") {
-		//filter it
-		return;
-	}
-
-	std::string error_source, error_type, error_severity;
-	switch(source) {
-		case GL_DEBUG_SOURCE_API_ARB:
-			error_source = "OpenGL";
-			break;
-		case GL_DEBUG_SOURCE_WINDOW_SYSTEM_ARB:
-			error_source = "Windows";
-			break;
-		case GL_DEBUG_SOURCE_SHADER_COMPILER_ARB:
-			error_source = "Shader Compiler";
-			break;
-		case GL_DEBUG_SOURCE_THIRD_PARTY_ARB:
-			error_source = "Third Party";
-			break;
-		case GL_DEBUG_SOURCE_APPLICATION_ARB:
-			error_source = "Application";
-			break;
-		case GL_DEBUG_SOURCE_OTHER_ARB:
-			error_source = "Other";
-			break;
-		default:
-			error_source = "UNKNOW";
-			break;
-	}
-
-	switch (type) {
-		case GL_DEBUG_TYPE_ERROR_ARB:
-			error_type = "Error";
-			break;
-		case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR_ARB:
-			error_type = "Deprecated behavior";
-			break;
-		case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR_ARB:
-			error_type = "Undefined behavior";
-			break;
-		case GL_DEBUG_TYPE_PORTABILITY_ARB:
-			error_type = "Portability";
-			break;
-		case GL_DEBUG_TYPE_PERFORMANCE_ARB:
-			error_type = "Performance";
-			break;
-		case GL_DEBUG_TYPE_OTHER_ARB:
-			error_type = "Other";
-		default:
-			error_type = "UNKNOW";
-			break;
-	}
-
-	switch (severity) {
-		case GL_DEBUG_SEVERITY_HIGH_ARB:
-			error_severity = "High";
-			break;
-		case GL_DEBUG_SEVERITY_MEDIUM_ARB:
-			error_severity = "Medium";
-			break;
-		case GL_DEBUG_SEVERITY_LOW_ARB:
-			error_severity = "Low";
-			break;
-		default:
-			error_severity = "UNKNOW";
-			break;
-	}
-
-	std::cout << "Source: " << error_source << "  Type: " << error_type << "  Severity: " << error_severity << "  Message: " << message << std::endl;
-
-	if (severity == GL_DEBUG_SEVERITY_HIGH_ARB) {
-		raise(SIGTRAP);
-	}
 }
