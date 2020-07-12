@@ -11,6 +11,7 @@ Buffer::Buffer(GLenum bufferType, int size = 0) : bufferType(bufferType), size(s
 
 Buffer::~Buffer() {
     glDeleteBuffers(1, &this->bufferId);
+    fprintf(stdout, "delete buffer\n");
 }
 
 ExitScopeHelper Buffer::bind() {
@@ -41,10 +42,12 @@ void Buffer::pushData(const void* data, unsigned int size, unsigned int offset) 
 
     #ifdef MEMCPY
         void* addr = map(GL_WRITE_ONLY);
-        std::memcpy((char*)addr + offset, data, size);
+        if (addr) {
+          std::memcpy((char*)addr + offset, data, size);
+        }
         unmap();
     #else
-        if (glNamedBufferSubData) {
+        if (glNamedBufferSubData && glNamedBufferData) {
             if (offset == 0) {
               glNamedBufferData(this->bufferId, size, NULL, GL_STATIC_DRAW);
             }
