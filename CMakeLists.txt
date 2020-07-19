@@ -48,7 +48,9 @@ if(NOT GLM_FOUND)
     message(Error " GLM not found")
 endif(NOT GLM_FOUND)
 
-include("example/window/CMakeLists.txt")
+if (EXAMPLES)
+  include("example/window/CMakeLists.txt")
+endif (EXAMPLES)
 
 add_library(engine STATIC ${src_engine})
 
