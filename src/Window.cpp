@@ -17,22 +17,15 @@ static void GlewInfo() {
   printf("----------------------------------------------------------------\n");
 }
 
-void DebugCallbackAMD(GLuint id, GLenum category, GLenum severity,
-                                GLsizei length, const GLchar* message,
-                                GLvoid* userParam) {
+void DebugCallbackAMD(GLuint id, GLenum category, GLenum severity, GLsizei length, const GLchar* message, GLvoid* userParam) {
   printf("\nAn OGL AMD error has occured: %s\n", message);
 }
 
-void DebugCallbackARB(GLenum source, GLenum type, GLuint id,
-                                GLenum severity, GLsizei length,
-                                const GLchar* message, GLvoid* userParam) {
+void DebugCallbackARB(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, GLvoid* userParam) {
   printf("\nAn OGL ARB error has occured: %s\n", message);
 }
 
-void printOutKhrDebugMessage(GLenum source, GLenum type, GLuint id,
-                                       GLenum severity, GLsizei length,
-                                       const GLchar* message,
-                                       const void* userParam) {
+void printOutKhrDebugMessage(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam) {
   printf("\nAn OGL KHR error has occured: %s\n", message);
 }
 
@@ -43,18 +36,8 @@ void CheckGL() {
   }
 }
 
-void GLAPIENTRY
-MessageCallback( GLenum source,
-                 GLenum type,
-                 GLuint id,
-                 GLenum severity,
-                 GLsizei length,
-                 const GLchar* message,
-                 const void* userParam )
-{
-  fprintf( stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
-           ( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ),
-            type, severity, message );
+void GLAPIENTRY MessageCallback( GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam ) {
+  fprintf( stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n", ( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ), type, severity, message );
 }
 
 Window::Window(const char* title, int width, int height, bool fullscreen) : title(title), width(width), height(height), fullscreen(fullscreen) {
@@ -128,20 +111,20 @@ bool Window::loop() {
 
   SDL_Event event;
   if (SDL_PollEvent( & event)) {
-      if (event.type == SDL_QUIT) {
-          return false;
-      }
+    if (event.type == SDL_QUIT) {
+      return false;
+    }
   }
 
   return true;
 }
 
 void Window::close() {
-    if (this->window) {
-        SDL_DestroyWindow(this->window);
-        window = NULL;
-    }
-    SDL_Quit();
+  if (this->window) {
+    SDL_DestroyWindow(this->window);
+    window = NULL;
+  }
+  SDL_Quit();
 }
 
 int Window::getWidth() {
@@ -150,9 +133,4 @@ int Window::getWidth() {
 
 int Window::getHeight() {
   return this->height;
-}
-
-void Window::errorCallback(int error, const char* desc) {
-    fprintf(stderr, "Error: %s\n", desc);
-    return;
 }
