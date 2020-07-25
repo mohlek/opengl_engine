@@ -50,6 +50,7 @@ endif(NOT GLM_FOUND)
 
 if (EXAMPLES)
   include("example/window/CMakeLists.txt")
+  include("example/shader/CMakeLists.txt")
 endif (EXAMPLES)
 
 add_library(engine STATIC ${src_engine})
