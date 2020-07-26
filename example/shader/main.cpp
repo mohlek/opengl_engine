@@ -43,7 +43,7 @@ int main() {
 
   Engine::VertexArrayObject vao;
   Engine::BufferPtr buffer = std::make_shared<Engine::Buffer>();
-  buffer->pushData(g_vertex_buffer_data, 9);
+  buffer->pushData(g_vertex_buffer_data, 9 * sizeof(float));
 
   vao.addBuffer(buffer);
 
