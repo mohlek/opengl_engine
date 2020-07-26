@@ -14,13 +14,12 @@ namespace Engine {
       private:
           GLuint vaoId = 0;
 
-          std::vector<Buffer*> buffers;
+          std::vector<std::shared_ptr<Buffer>> buffers;
       public:
           VertexArrayObject();
           virtual ~VertexArrayObject();
 
           void addBuffer(std::shared_ptr<Buffer>& buffer);
-          void addBuffer(Buffer& buffer);
           
           ExitScopeHelper bind();
   };

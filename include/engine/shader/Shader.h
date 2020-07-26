@@ -26,6 +26,8 @@ namespace Engine {
 
             GLuint getShaderId() { return this->shaderId; }
     };
+
+    typedef std::shared_ptr<Engine::Shader> ShaderPtr;
 }
 
 #endif

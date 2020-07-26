@@ -25,27 +25,12 @@ void VertexArrayObject::addBuffer(std::shared_ptr<Buffer>& buffer) {
         glVertexArrayAttribFormat(this->vaoId, index, buffer->valuesPerIndex, GL_FLOAT, GL_FALSE, 0);
     } else {
         auto unbindHelper = buffer->bind();
+        auto unbindHelper2 = bind();
         glEnableVertexAttribArray(index);
         glVertexAttribPointer(index, buffer->valuesPerIndex, buffer->dataType, GL_FALSE, buffer->stride, 0);
     }
 
-    this->buffers.push_back(buffer.get());
-}
-
-void VertexArrayObject::addBuffer(Buffer& buffer) {
-    const int index = this->buffers.size();
-
-    if (glEnableVertexArrayAttrib) {
-        glEnableVertexArrayAttrib(this->vaoId, index);
-        glVertexArrayVertexBuffer(this->vaoId, index, buffer.getId(), 0, buffer.stride);
-        glVertexArrayAttribFormat(this->vaoId, index, buffer.valuesPerIndex, GL_FLOAT, GL_FALSE, 0);
-    } else {
-        auto unbindHelper = buffer.bind();
-        glEnableVertexAttribArray(index);
-        glVertexAttribPointer(index, buffer.valuesPerIndex, buffer.dataType, GL_FALSE, buffer.stride, 0);
-    }
-
-    this->buffers.push_back(&buffer);
+    this->buffers.push_back(buffer);
 }
 
 ExitScopeHelper VertexArrayObject::bind() {

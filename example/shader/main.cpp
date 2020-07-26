@@ -9,8 +9,11 @@ int main() {
 
   const char* srcVert = R"(
         #version 410
+        layout(location = 0) in vec3 vertexPosition_modelspace;
 
         void main() {
+          gl_Position.xyz = vertexPosition_modelspace;
+          gl_Position.w = 1.0;
         }
       )";
 
@@ -24,9 +27,13 @@ int main() {
         }
       )";
 
-  Engine::Shader fragShader(GL_FRAGMENT_SHADER, srcFrag);
-  fragShader.compile();
+  Engine::ShaderPtr fragShader = std::make_shared<Engine::Shader>(GL_FRAGMENT_SHADER, srcFrag);
+  Engine::ShaderPtr vertShader = std::make_shared<Engine::Shader>(GL_VERTEX_SHADER, srcVert);
 
+  Engine::ShaderProgram prog;
+  prog.shaders.push_back(vertShader);
+  prog.shaders.push_back(fragShader);
+  prog.link();
 
   static const GLfloat g_vertex_buffer_data[] = {
     -1.0f, -1.0f, 0.0f,
@@ -35,12 +42,16 @@ int main() {
   };
 
   Engine::VertexArrayObject vao;
-  Engine::Buffer buffer;
-  buffer.pushData(g_vertex_buffer_data, 9);
+  Engine::BufferPtr buffer = std::make_shared<Engine::Buffer>();
+  buffer->pushData(g_vertex_buffer_data, 9);
 
   vao.addBuffer(buffer);
 
   do {
+    vao.bind();
+    prog.use();
+
+    glDrawArrays(GL_TRIANGLES, 0, 3);
     // shader stuff...
   } while (win->loop());
 
