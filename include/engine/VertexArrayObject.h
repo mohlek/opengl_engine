@@ -5,6 +5,8 @@
 #include <vector>
 #include <memory>
 
+#include <framework/VertexArrayObject.h>
+
 #include "Buffer.h"
 #include "ExitScopeHelper.h"
 
@@ -12,14 +14,14 @@ namespace Engine {
     
   class VertexArrayObject {
       private:
-          GLuint vaoId = 0;
+          GLuint _vaoId = 0;
 
-          std::vector<std::shared_ptr<Buffer>> buffers;
+          std::vector<BufferBase> _buffers;
       public:
           VertexArrayObject();
           virtual ~VertexArrayObject();
 
-          void addBuffer(std::shared_ptr<Buffer>& buffer);
+          void addBuffer(const BufferBase& buffer);
           
           ExitScopeHelper bind();
   };

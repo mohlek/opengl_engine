@@ -3,39 +3,39 @@
 using namespace Engine;
 
 VertexArrayObject::VertexArrayObject() {
-    if (glCreateVertexArrays) {
-        glCreateVertexArrays(1, &this->vaoId);
-        return;
-    }
-    glGenVertexArrays(1, &this->vaoId);
-    auto unbind = bind();
+  GL::createVertexArrays(1, &this->_vaoId);
 }
 
 VertexArrayObject::~VertexArrayObject() {
-    this->buffers.clear();
-    glDeleteVertexArrays(1, &this->vaoId); 
+  //this->buffers.clear();
+  glDeleteVertexArrays(1, &this->_vaoId); 
 }
 
-void VertexArrayObject::addBuffer(std::shared_ptr<Buffer>& buffer) {
-    const int index = this->buffers.size();
+void VertexArrayObject::addBuffer(const BufferBase& buffer) {
+  const int index = this->_buffers.size();
+  // GL::vertexArrayAttrib(this->_vaoId, index, buffer._bufferId, buffer._itemSize,   
 
-    if (glEnableVertexArrayAttrib) {
-        glEnableVertexArrayAttrib(this->vaoId, index);
-        glVertexArrayVertexBuffer(this->vaoId, index, buffer->getId(), 0, buffer->stride);
-        glVertexArrayAttribFormat(this->vaoId, index, buffer->valuesPerIndex, GL_FLOAT, GL_FALSE, 0);
-    } else {
-        auto unbindHelper = buffer->bind();
-        auto unbindHelper2 = bind();
-        glEnableVertexAttribArray(index);
-        glVertexAttribPointer(index, buffer->valuesPerIndex, buffer->dataType, GL_FALSE, buffer->stride, 0);
-    }
+    // if (buffer.bufferType == GL_ELEMENT_ARRAY_BUFFER) {
+    //   return;
+    // }
 
-    this->buffers.push_back(buffer);
+    // if (glEnableVertexArrayAttrib) {
+    //     glEnableVertexArrayAttrib(this->vaoId, index);
+    //     glVertexArrayVertexBuffer(this->vaoId, index, buffer.getId(), 0, buffer.stride);
+    //     glVertexArrayAttribFormat(this->vaoId, index, buffer.valuesPerIndex, GL_FLOAT, GL_FALSE, 0);
+    // } else {
+    //     auto unbindHelper = buffer.bind();
+    //     auto unbindHelper2 = bind();
+    //     glEnableVertexAttribArray(index);
+    //     glVertexAttribPointer(index, buffer->valuesPerIndex, buffer->dataType, GL_FALSE, buffer->stride, 0);
+    // }
+
+  this->_buffers.push_back(buffer);
 }
 
 ExitScopeHelper VertexArrayObject::bind() {
-    glBindVertexArray(this->vaoId);
-    return ExitScopeHelper([](){
-      glBindVertexArray(0);  
-    });
+  glBindVertexArray(this->_vaoId);
+  return ExitScopeHelper([](){
+    glBindVertexArray(0);  
+  });
 }

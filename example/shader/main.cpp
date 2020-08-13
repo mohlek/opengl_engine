@@ -38,20 +38,24 @@ int main() {
   static const GLfloat g_vertex_buffer_data[] = {
     -1.0f, -1.0f, 0.0f,
      1.0f, -1.0f, 0.0f,
+  };
+  static const GLfloat g_vertex_buffer_data2[] = {
      0.0f,  1.0f, 0.0f,
   };
-
+  
   Engine::VertexArrayObject vao;
   Engine::BufferPtr buffer = std::make_shared<Engine::Buffer>();
-  buffer->pushData(g_vertex_buffer_data, 9 * sizeof(float));
+  buffer->stride = 3 * sizeof(float);
+
+  //*buffer << std:span(g_vertex_buffer_data, 24);
 
   vao.addBuffer(buffer);
 
   do {
-    vao.bind();
+    auto unbind = vao.bind();
     prog.use();
 
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glDrawArrays(GL_TRIANGLES, 0, 9);
     // shader stuff...
   } while (win->loop());
 

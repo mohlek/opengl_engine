@@ -17,8 +17,8 @@ namespace Engine {
   class Sprite : public RenderObject {
     private:
       VertexArrayObjectPtr vao;
-      BufferPtr vboPos;
-      BufferPtr vboUV;
+      Buffer<glm::vec3> vboPos;
+      Buffer<glm::vec2> vboUV;
       const TexturePtr texture;
     public:
       glm::vec2 position;

@@ -2,6 +2,7 @@
 #define _H_ANIMATEDSPRITE
 
 #include <GL/glew.h>
+#include <glm/glm.hpp>
 
 #include <vector>
 #include <memory>
@@ -19,8 +20,8 @@ namespace Engine {
   class AnimatedSprite : public RenderObject {
     private:
       VertexArrayObjectPtr vao;
-      BufferPtr vboPos;
-      BufferPtr vboUV;
+      Buffer<glm::vec3> vboPos;
+      Buffer<glm::vec2> vboUV;
     public:
       std::vector<TexturePtr> textures;
       int index = 0;

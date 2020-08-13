@@ -2,37 +2,26 @@
 
 using namespace Engine;
 
-AnimatedSprite::AnimatedSprite() {
+AnimatedSprite::AnimatedSprite() : vboUV(6), vboPos(6) {
   this->vao = std::make_shared<VertexArrayObject>();
-  this->vboPos = std::make_shared<Buffer>();
-  this->vboUV = std::make_shared<Buffer>();
 
-  this->vboPos->stride = 3 * sizeof(float);
-  this->vboUV->stride = 2 * sizeof(float);
-  this->vboUV->valuesPerIndex = 2;
+  this->vboPos[0] = { 0.0f,  1.0f, 0.0f };
+  this->vboPos[1] = { 1.0f,  1.0f, 0.0f };
+  this->vboPos[2] = { 1.0f,  0.0f, 0.0f };
+  this->vboPos[3] = { 1.0f,  0.0f, 0.0f };
+  this->vboPos[4] = { 0.0f,  0.0f, 0.0f };
+  this->vboPos[5] = { 0.0f,  1.0f, 0.0f };
+  this->vboPos.flush();
 
-  float points[] = {
-     0.0f,  1.0f, 0.0f,
-     1.0f,  1.0f, 0.0f,
-     1.0f,  0.0f, 0.0f,
 
-     1.0f,  0.0f, 0.0f,
-     0.0f,  0.0f, 0.0f,
-     0.0f,  1.0f, 0.0f
-  };
+  this->vboUV[0] = { 0.0f, 0.0f };
+  this->vboUV[1] = { 1.0f, 0.0f };
+  this->vboUV[2] = { 1.0f, 1.0f };
+  this->vboUV[3] = { 1.0f, 1.0f };
+  this->vboUV[4] = { 0.0f, 1.0f };
+  this->vboUV[5] = { 0.0f, 0.0f };
+  this->vboUV.flush();
 
-  float uvs[] = {
-    0.0f, 0.0f,
-    1.0f, 0.0f,
-    1.0f, 1.0f,
-
-    1.0f, 1.0f,
-    0.0f, 1.0f,
-    0.0f, 0.0f,
-  };
-
-  this->vboPos->pushData(points, sizeof(points));
-  this->vboUV->pushData(uvs, sizeof(uvs));
 
   this->vao->addBuffer(this->vboPos);
   this->vao->addBuffer(this->vboUV);

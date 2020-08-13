@@ -2,37 +2,25 @@
 
 using namespace Engine;
 
-Sprite::Sprite(const std::shared_ptr<Texture>& texture) : texture(texture) {
+Sprite::Sprite(const std::shared_ptr<Texture>& texture) : vboPos(6), vboUV(6), texture(texture) {
   this->vao = std::make_shared<VertexArrayObject>();
-  this->vboPos = std::make_shared<Buffer>();
-  this->vboUV = std::make_shared<Buffer>();
 
-  this->vboPos->stride = 3 * sizeof(float);
-  this->vboUV->stride = 2 * sizeof(float);
-  this->vboUV->valuesPerIndex = 2;
+  this->vboPos[0] = { 0.0f,  1.0f, 0.0f };
+  this->vboPos[1] = { 1.0f,  1.0f, 0.0f };
+  this->vboPos[2] = { 1.0f,  0.0f, 0.0f };
+  this->vboPos[3] = { 1.0f,  0.0f, 0.0f };
+  this->vboPos[4] = { 0.0f,  0.0f, 0.0f };
+  this->vboPos[5] = { 0.0f,  1.0f, 0.0f };
+  this->vboPos.flush();
 
-  float points[] = {
-     0.0f,  1.0f, 0.0f,
-     1.0f,  1.0f, 0.0f,
-     1.0f,  0.0f, 0.0f,
 
-     1.0f,  0.0f, 0.0f,
-     0.0f,  0.0f, 0.0f,
-     0.0f,  1.0f, 0.0f
-  };
-
-  float uvs[] = {
-    0.0f, 0.0f,
-    1.0f, 0.0f,
-    1.0f, 1.0f,
-
-    1.0f, 1.0f,
-    0.0f, 1.0f,
-    0.0f, 0.0f,
-  };
-
-  this->vboPos->pushData(points, sizeof(points));
-  this->vboUV->pushData(uvs, sizeof(uvs));
+  this->vboUV[0] = { 0.0f, 0.0f };
+  this->vboUV[1] = { 1.0f, 0.0f };
+  this->vboUV[2] = { 1.0f, 1.0f };
+  this->vboUV[3] = { 1.0f, 1.0f };
+  this->vboUV[4] = { 0.0f, 1.0f };
+  this->vboUV[5] = { 0.0f, 0.0f };
+  this->vboUV.flush();
 
   this->vao->addBuffer(this->vboPos);
   this->vao->addBuffer(this->vboUV);

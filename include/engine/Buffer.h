@@ -1,42 +1,129 @@
 #ifndef BUFFER_H
 #define BUFFER_H
 
-#include <GL/glew.h>
-
 #include <memory>
-
-#include "ExitScopeHelper.h"
+#include <GL/glew.h>
+#include <stdexcept>
+#include <framework/Buffer.h>
 
 namespace Engine {
 
-  class Buffer {
-      private:
-          GLuint bufferId = 0;
-      public:
-          const GLenum bufferType;
-         
-          GLint size;
-          GLenum dataType = GL_FLOAT;
-          GLsizei stride;
-          GLenum valuesPerIndex = 3;
+  class BufferBaseDeleter {
+    private:
+      GLuint _bufferId = 0;
+      GLenum _target;
+    public:
+      BufferBaseDeleter(GLenum target, GLuint bufferId) : _target(target), _bufferId(bufferId) {}
 
-          Buffer(GLenum bufferType, int size);
-          Buffer() : Buffer(GL_ARRAY_BUFFER, 0) {};
-          virtual ~Buffer();
-
-          ExitScopeHelper bind();
-          void unbind();
-          
-          void pushData(const void* data, unsigned int size, unsigned int offset = 0);
-
-          void* map(GLenum access);
-          bool  unmap();
-      
-          GLuint getId() { return bufferId; }
-  
+      void operator()(void* p) const {
+        p;
+        GL::unmapBuffer(this->_target, this->_bufferId);
+        GL::deleteBuffers(1, &this->_bufferId);
+      }
   };
-  
-  using BufferPtr = std::shared_ptr<Engine::Buffer>;
+
+  class BufferBase {
+      protected:
+          std::shared_ptr<void> _ptr = nullptr;
+      public:
+          GLuint _bufferId = 0;
+          GLenum _target = GL_ARRAY_BUFFER;
+          int _size = 0;
+          int _itemSize = 0;
+          virtual ~BufferBase(){}
+  };
+
+  template<typename T>
+  class Buffer : public BufferBase {
+      public:
+        Buffer(int size, GLenum usage = GL_STATIC_DRAW, GLenum target = GL_ARRAY_BUFFER) {
+          this->_itemSize = sizeof(T);
+          this->_size = size;
+          this->_target = target;
+          GL::createBuffers(_target, 1, &this->_bufferId);
+
+          auto flags = GL_MAP_READ_BIT | GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT;
+          auto bsize = this->_size * this->_itemSize;
+
+          auto raw_ptr = (T*)GL::mapBufferRange(_target, this->_bufferId, 0, bsize, flags | GL_MAP_FLUSH_EXPLICIT_BIT);
+          this->_ptr = std::shared_ptr<void>(raw_ptr, BufferBaseDeleter(this->_target, this->_bufferId));
+        }
+        ~Buffer() {}
+
+        void flush() {
+          GL::flushMappedBufferRange(this->_target, this->_bufferId, 0, this->_size * this->_itemSize);
+        }
+        
+        const T& at(int index) const {
+          if (index >= this._size || index < 0) {
+            throw std::out_of_range("OUT OF RANGE");
+          }
+          return this->operator[](index);
+        }
+        T& at(int index) {
+          if (index >= this._size || index < 0) {
+            throw std::out_of_range("OUT OF RANGE");
+          }
+          return this->operator[](index);
+        }
+
+        const T& operator[](int index) const {
+          return *((T*)this->_ptri.get() + index);
+        }
+        T& operator[](int index) {
+          return *((T*)this->_ptr.get() + index);
+        }
+
+        const T& front() const {
+          return this->operator[](0);
+        }
+        T& front() {
+          return this->operator[](0);
+        }
+        const T& back() const {
+          return this->operator[](this->size() - 1);
+        }
+        T& back() {
+          return this->operator[](this->size() - 1);
+        }
+        
+        const T* data() const {
+          return this->_ptr.get();
+        }
+        T* data() {
+          return this->_ptr.get();
+        }
+
+        T* begin() {
+          return &this->front();
+        }
+        const T* begin() const {
+          return &this->front();
+        }
+        const T* cbegin(){
+          return &this->front();
+        }
+        const T* cbegin() const {
+          return &this->front();
+        }
+
+        T* end() {
+          return &this->back();
+        }
+        const T* end() const {
+          return &this->back();
+        }
+        const T* cend(){
+          return &this->back();
+        }
+        const T* cend() const {
+          return &this->back();
+        }
+
+        int size() const {
+          return this->_size;
+        }
+  };
 }
 
 
