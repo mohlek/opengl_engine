@@ -26,7 +26,8 @@ endif (EXAMPLES)
 
 add_library(engine STATIC ${src_engine})
 
-target_include_directories(engine PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/framework/include")
-target_include_directories(engine INTERFACE "${GLM_INCLUDE_DIRS}")
+message("abc ${CMAKE_CURRENT_SOURCE_DIR}")
+
+target_include_directories(engine INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/framework/include" "${GLM_INCLUDE_DIRS}")
 target_link_libraries(engine INTERFACE SDL2::SDL2)
 target_link_libraries(engine PRIVATE framework)

@@ -1,4 +1,4 @@
-#include <../framework/VertexArrayObject,h>
+#include "../include/framework/VertexArrayObject.h"
 
 void GL::createVertexArrays(GLuint n, GLuint* buffer) {
   if (glCreateVertexArrays) {
