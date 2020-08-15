@@ -26,5 +26,6 @@ endif (EXAMPLES)
 
 add_library(engine STATIC ${src_engine})
 
+target_include_directories(engine INTERFACE "${PROJECT_SOURCE_DIR}/include")
 target_link_libraries(engine INTERFACE SDL2::SDL2)
 target_link_libraries(engine PRIVATE framework)
