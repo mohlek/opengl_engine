@@ -45,5 +45,6 @@ endif(NOT GLM_FOUND)
 add_library(framework STATIC ${src_framework})
 
 target_include_directories(framework INTERFACE "${GLM_INCLUDE_DIRS}")
+target_include_directories(framework INTERFACE "${CMAKE_SOURCE_DIR}/include/")
 target_link_libraries(framework INTERFACE GLEW::GLEW)
 target_link_libraries(framework INTERFACE OpenGL::GL) 
