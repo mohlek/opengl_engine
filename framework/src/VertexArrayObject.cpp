@@ -12,6 +12,10 @@ void GL::createVertexArrays(GLuint n, GLuint* buffer) {
   glBindVertexArray(0);
 }
 
+void GL::deleteVertexArrays(GLuint n, GLuint* buffer) {
+  glDeleteVertexArrays(n, buffer);
+}
+
 void GL::vertexArrayAttrib(GLuint vao, GLuint index, GLuint bufferId, GLuint stride, GLuint valuesPerIndex, GLenum dataType, GLenum target) {
   if (glEnableVertexArrayAttrib) {
     glEnableVertexArrayAttrib(vao, index);

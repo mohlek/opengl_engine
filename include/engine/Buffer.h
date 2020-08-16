@@ -28,6 +28,7 @@ namespace Engine {
       public:
           GLuint _bufferId = 0;
           GLenum _target = GL_ARRAY_BUFFER;
+          GLenum _dataType = GL_FLOAT;
           int _size = 0;
           int _itemSize = 0;
           virtual ~BufferBase(){}
