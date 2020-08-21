@@ -50,7 +50,10 @@ namespace Engine {
           this->_target = target;
           GL::createBuffers(_target, 1, &this->_bufferId);
 
-          auto flags = GL_MAP_READ_BIT | GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT;
+          auto flags = GL_MAP_READ_BIT | GL_MAP_WRITE_BIT;
+          if (glBufferStorage) {
+            flags |= GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT;
+          }
           auto bsize = this->_size * this->_itemSize;
 
           GL::bufferStorage(this->_target, this->_bufferId, bsize, NULL, flags);
@@ -60,10 +63,13 @@ namespace Engine {
         ~Buffer() {}
 
         void map() {
-          auto flags = GL_MAP_READ_BIT | GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT;
+          auto flags = GL_MAP_READ_BIT | GL_MAP_WRITE_BIT;
+          if (glBufferStorage) {
+            flags |= GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT | GL_MAP_FLUSH_EXPLICIT_BIT;
+          }
           auto bsize = this->_size * this->_itemSize;
 
-          auto raw_ptr = (T*)GL::mapBufferRange(_target, this->_bufferId, 0, bsize, flags | GL_MAP_FLUSH_EXPLICIT_BIT);
+          auto raw_ptr = (T*)GL::mapBufferRange(_target, this->_bufferId, 0, bsize, flags);
           this->_ptr = std::shared_ptr<void>(raw_ptr, BufferBaseDeleter(this->_target, this->_bufferId));
         }
 
