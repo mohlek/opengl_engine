@@ -18,7 +18,7 @@ void printProgramInfoLog(GLuint obj) {
 	int charsWritten  = 0;
 	char *infoLog;
 
-	glGetProgramiv(obj, GL_INFO_LOG_LENGTH,&infologLength);
+	glGetProgramiv(obj, GL_INFO_LOG_LENGTH, &infologLength);
 
 	if (infologLength > 0) {
 		infoLog = (char *)malloc(infologLength);
@@ -36,8 +36,8 @@ void ShaderProgram::link() {
     this->programId = glCreateProgram();
 
     for (auto& s : this->shaders) {
-        s->compile();
-        glAttachShader(this->programId, s->getShaderId());
+        s.compile();
+        glAttachShader(this->programId, s.getShaderId());
     }
 
     glLinkProgram(this->programId);

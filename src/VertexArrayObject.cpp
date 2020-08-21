@@ -10,15 +10,23 @@ VertexArrayObject::~VertexArrayObject() {
   GL::deleteVertexArrays(1, &this->_vaoId);
 }
 
-void VertexArrayObject::addBuffer(const BufferBase& buffer) {
-  const int index = this->_buffers.size();
-  GL::vertexArrayAttrib(this->_vaoId, index, buffer._bufferId, buffer._itemSize, 3, buffer._dataType, buffer._target);
-  this->_buffers.push_back(buffer);
+void VertexArrayObject::setBuffer(int location, BufferBase& buffer) {
+  bind();
+  buffer.bind();
+
+  if (buffer._target != GL_ELEMENT_ARRAY_BUFFER) {
+    glEnableVertexAttribArray(location);
+    glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE, sizeof(buffer._dataType), 0);
+  }
+  
+  unbind();
+  buffer.unbind();
 }
 
-ExitScopeHelper VertexArrayObject::bind() {
+void VertexArrayObject::bind() {
   glBindVertexArray(this->_vaoId);
-  return ExitScopeHelper([](){
-    glBindVertexArray(0);  
-  });
+}
+
+void VertexArrayObject::unbind() {
+  glBindVertexArray(0);
 }

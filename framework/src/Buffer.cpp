@@ -26,6 +26,16 @@ void GL::bufferData(GLenum target, GLuint buffer, GLsizeiptr size, const void *d
   glBindBuffer(target, 0);
 }
 
+void GL::bufferSubData(GLenum target, GLuint buffer, GLuint offset, GLsizeiptr size, const void* data) {
+  if (glNamedBufferSubData) {
+    glNamedBufferSubData(buffer, offset, size, data);
+    return;
+  }
+  glBindBuffer(target, buffer);
+  glBufferSubData(target, offset, size, data);
+  glBindBuffer(target, 0);
+}
+
 void* GL::mapBufferRange(GLenum target, GLuint buffer, GLintptr offset, GLsizeiptr length, GLbitfield access) {
   if (glMapNamedBufferRange) {
     return glMapNamedBufferRange(buffer, offset, length, access);
@@ -63,5 +73,13 @@ void GL::bufferStorage(GLenum target, GLuint buffer, GLsizeiptr size, const void
   }
   glBindBuffer(target, buffer);
   glBufferStorage(target, size, data, flags);
+  glBindBuffer(target, 0);
+}
+
+void GL::bindBuffer(GLenum target, GLuint buffer) {
+  glBindBuffer(target, buffer);
+}
+
+void GL::unbindBuffer(GLenum target) {
   glBindBuffer(target, 0);
 }

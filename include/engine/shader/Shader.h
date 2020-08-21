@@ -16,7 +16,7 @@ namespace Engine {
             const GLenum shaderType;
             const std::string source;
 
-            Shader(ShaderLoader& loader) : Shader(loader.shaderType, loader.source) {};
+            Shader(const ShaderLoader& loader) : Shader(loader.shaderType, loader.source) {};
 
             Shader(const GLenum shaderType, const std::string& source) : shaderType(shaderType), source(source) {};
             Shader(const GLenum shaderType, const std::string&& source): shaderType(shaderType), source(std::move(source)) {};

@@ -32,12 +32,19 @@ namespace Engine {
           int _size = 0;
           int _itemSize = 0;
           virtual ~BufferBase(){}
+
+          void bind() {
+            GL::bindBuffer(_target, _bufferId);
+          }
+          void unbind() {
+            GL::unbindBuffer(_target);
+          }
   };
 
   template<typename T>
   class Buffer : public BufferBase {
       public:
-        Buffer(int size, GLenum usage = GL_STATIC_DRAW, GLenum target = GL_ARRAY_BUFFER) {
+        Buffer(int size, GLenum target = GL_ARRAY_BUFFER) {
           this->_itemSize = sizeof(T);
           this->_size = size;
           this->_target = target;
@@ -45,6 +52,8 @@ namespace Engine {
 
           auto flags = GL_MAP_READ_BIT | GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT;
           auto bsize = this->_size * this->_itemSize;
+
+          GL::bufferStorage(this->_target, this->_bufferId, bsize, NULL, flags);
 
           auto raw_ptr = (T*)GL::mapBufferRange(_target, this->_bufferId, 0, bsize, flags | GL_MAP_FLUSH_EXPLICIT_BIT);
           this->_ptr = std::shared_ptr<void>(raw_ptr, BufferBaseDeleter(this->_target, this->_bufferId));
@@ -69,7 +78,7 @@ namespace Engine {
         }
 
         const T& operator[](int index) const {
-          return *((T*)this->_ptri.get() + index);
+          return *((T*)this->_ptr.get() + index);
         }
         T& operator[](int index) {
           return *((T*)this->_ptr.get() + index);

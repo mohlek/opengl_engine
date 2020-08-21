@@ -21,9 +21,10 @@ namespace Engine {
           VertexArrayObject();
           virtual ~VertexArrayObject();
 
-          void addBuffer(const BufferBase& buffer);
+          void setBuffer(int location, BufferBase& buffer);
           
-          ExitScopeHelper bind();
+          void bind();
+          void unbind();
   };
 
   using VertexArrayObjectPtr = std::shared_ptr<Engine::VertexArrayObject>;

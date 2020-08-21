@@ -78,6 +78,8 @@ bool Window::create() {
   SDL_assert(glewInit() == GLEW_OK);
   glGetError();
 
+  glEnable(GL_DEPTH_TEST);
+
   GlewInfo();
   CheckGL();
 

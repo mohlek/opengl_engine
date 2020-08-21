@@ -22,9 +22,9 @@ void GL::vertexArrayAttrib(GLuint vao, GLuint index, GLuint bufferId, GLuint str
     glVertexArrayVertexBuffer(vao, index, bufferId, 0, stride);
     glVertexArrayAttribFormat(vao, index, valuesPerIndex, dataType, GL_FALSE, 0);
   } else {
-    glBindBuffer(target, bufferId);
     glBindVertexArray(vao);
     glEnableVertexAttribArray(index);
+    glBindBuffer(target, bufferId);
     glVertexAttribPointer(index, valuesPerIndex, dataType, GL_FALSE, stride, 0);
     glBindVertexArray(0);
     glBindBuffer(target, 0);

@@ -17,7 +17,7 @@ namespace Engine {
             GLuint programId = 0;
         
         public:
-            std::vector<std::shared_ptr<Shader>> shaders;
+            std::vector<Shader> shaders;
             std::map<std::string, GLuint> uniforms;
 
             ShaderProgram();
