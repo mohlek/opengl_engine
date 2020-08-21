@@ -11,16 +11,7 @@ VertexArrayObject::~VertexArrayObject() {
 }
 
 void VertexArrayObject::setBuffer(int location, BufferBase& buffer) {
-  bind();
-  buffer.bind();
-
-  if (buffer._target != GL_ELEMENT_ARRAY_BUFFER) {
-    glEnableVertexAttribArray(location);
-    glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE, buffer._itemSize, 0);
-  }
-  
-  unbind();
-  buffer.unbind();
+  GL::vertexArrayAttrib(this->_vaoId, location, buffer._bufferId, buffer._itemSize, 3, buffer._dataType, buffer._target);
 }
 
 void VertexArrayObject::bind() {

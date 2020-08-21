@@ -71,8 +71,13 @@ void GL::bufferStorage(GLenum target, GLuint buffer, GLsizeiptr size, const void
     glNamedBufferStorage(buffer, size, data, flags);
     return;
   }
+
   glBindBuffer(target, buffer);
-  glBufferStorage(target, size, data, flags);
+  if (glBufferStorage) {
+    glBufferStorage(target, size, data, flags);
+  } else {
+    glBufferData(target, size, data, GL_STATIC_DRAW);
+  }
   glBindBuffer(target, 0);
 }
 

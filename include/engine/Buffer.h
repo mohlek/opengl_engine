@@ -55,12 +55,24 @@ namespace Engine {
 
           GL::bufferStorage(this->_target, this->_bufferId, bsize, NULL, flags);
 
-          auto raw_ptr = (T*)GL::mapBufferRange(_target, this->_bufferId, 0, bsize, flags | GL_MAP_FLUSH_EXPLICIT_BIT);
-          this->_ptr = std::shared_ptr<void>(raw_ptr, BufferBaseDeleter(this->_target, this->_bufferId));
+          map();
         }
         ~Buffer() {}
 
+        void map() {
+          auto flags = GL_MAP_READ_BIT | GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT;
+          auto bsize = this->_size * this->_itemSize;
+
+          auto raw_ptr = (T*)GL::mapBufferRange(_target, this->_bufferId, 0, bsize, flags | GL_MAP_FLUSH_EXPLICIT_BIT);
+          this->_ptr = std::shared_ptr<void>(raw_ptr, BufferBaseDeleter(this->_target, this->_bufferId));
+        }
+
         void flush() {
+          if (!glBufferStorage) {
+            this->_ptr.reset();
+            map();
+            return;
+          }
           GL::flushMappedBufferRange(this->_target, this->_bufferId, 0, this->_size * this->_itemSize);
         }
         

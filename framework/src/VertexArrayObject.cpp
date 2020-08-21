@@ -17,6 +17,14 @@ void GL::deleteVertexArrays(GLuint n, GLuint* buffer) {
 }
 
 void GL::vertexArrayAttrib(GLuint vao, GLuint index, GLuint bufferId, GLuint stride, GLuint valuesPerIndex, GLenum dataType, GLenum target) {
+  if (target == GL_ELEMENT_ARRAY_BUFFER) {
+    glBindVertexArray(vao);
+    glBindBuffer(target, bufferId);
+    glBindVertexArray(0);
+    glBindBuffer(target, bufferId);
+    return;
+  }
+  
   if (glEnableVertexArrayAttrib) {
     glEnableVertexArrayAttrib(vao, index);
     glVertexArrayVertexBuffer(vao, index, bufferId, 0, stride);
