@@ -16,7 +16,7 @@ void VertexArrayObject::setBuffer(int location, BufferBase& buffer) {
 
   if (buffer._target != GL_ELEMENT_ARRAY_BUFFER) {
     glEnableVertexAttribArray(location);
-    glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE, sizeof(buffer._dataType), 0);
+    glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE, buffer._itemSize, 0);
   }
   
   unbind();
