@@ -23,10 +23,10 @@ namespace Engine {
 
       void load(const char* path);
       void pushData(GLint format, GLsizei width, GLsizei height, const void* data);
-      ExitScopeHelper bind();
+      
+      void bind();
+      void unbind();
   };
-
-  using TexturePtr = std::shared_ptr<Engine::Texture>;
 }
 
 

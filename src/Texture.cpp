@@ -12,6 +12,8 @@ Texture::Texture(GLenum target) : target(target){
   if (!this->textureId) {
     fprintf(stderr, "Could not create texture\n");
   }
+  bind();
+  unbind();
 }
 
 Texture::Texture(const char* filename, GLenum target) : Texture(target) {
@@ -23,8 +25,7 @@ Texture::~Texture() {
 }
 
 void Texture::pushData(GLint format, GLsizei width, GLsizei height, const void* data) {
-  auto bindHelper = bind();
-
+  bind();
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -32,6 +33,8 @@ void Texture::pushData(GLint format, GLsizei width, GLsizei height, const void* 
 
   glTexImage2D(this->target, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
   glGenerateMipmap(this->target);
+
+  unbind();
 }
 
 void Texture::load(const char* path) {
@@ -39,15 +42,15 @@ void Texture::load(const char* path) {
 
   int width, height, nrChannels;
   unsigned char *data = stbi_load(path, &width, &height, &nrChannels, 0);
-  pushData(GL_RGBA, width, height, data);
+  pushData(GL_RGB, width, height, data);
 
   stbi_image_free(data);
 }
 
-ExitScopeHelper Texture::bind() {
+void Texture::bind() {
   glBindTexture(this->target, this->textureId);
-  auto target = this->target;
-  return ExitScopeHelper([target](){
-    glBindTexture(target, 0);
-  });
+}
+
+void Texture::unbind() {
+  glBindTexture(target, 0);
 }
