@@ -5,7 +5,6 @@
 #include <GL/glew.h>
 #include <stdexcept>
 #include <framework/Buffer.h>
-#include "Deleter.h"
 
 namespace Engine {
 
