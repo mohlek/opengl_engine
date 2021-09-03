@@ -5,10 +5,11 @@
 #include <GL/glew.h>
 #include <stdexcept>
 #include <framework/Buffer.h>
+#include "Deleter.h"
 
 namespace Engine {
 
-  class BufferBaseDeleter {
+  class BufferBase;  class BufferBaseDeleter {
     private:
       GLuint _bufferId = 0;
       GLenum _target;
@@ -16,7 +17,7 @@ namespace Engine {
       BufferBaseDeleter(GLenum target, GLuint bufferId) : _target(target), _bufferId(bufferId) {}
 
       void operator()(void* p) const {
-        p;
+        (void)p;
         GL::unmapBuffer(this->_target, this->_bufferId);
         GL::deleteBuffers(1, &this->_bufferId);
       }
@@ -83,13 +84,13 @@ namespace Engine {
         }
         
         const T& at(int index) const {
-          if (index >= this._size || index < 0) {
+          if (index >= this->_size || index < 0) {
             throw std::out_of_range("OUT OF RANGE");
           }
           return this->operator[](index);
         }
         T& at(int index) {
-          if (index >= this._size || index < 0) {
+          if (index >= this->_size || index < 0) {
             throw std::out_of_range("OUT OF RANGE");
           }
           return this->operator[](index);
