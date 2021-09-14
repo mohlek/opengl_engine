@@ -5,12 +5,17 @@
 namespace Engine {
     
     class Camera {
-        private:
-            GLuint cameraBuffer;
         public:
-            Camera();
-            ~Camera();
+            glm::vec3 position;
+            glm::vec3 direction;
+            glm::vec3 up;
+            
+            Camera() : position(glm::vec3(0.0f, 0.0f, 0.0f)), direction(glm::vec3(1.0f, 0.0f, -1.0f)), up(glm::vec3(0.0f, 1.0f, 0.0f)){
+            }
+            ~Camera() {}
 
-            void setCamera(glm::vec3 cameraPos, glm::vec3 lookAt);
+            glm::mat4 getView() {
+                return glm::lookAt(position, position + direction, up);
+            }
     };
 }

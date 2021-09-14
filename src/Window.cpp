@@ -111,13 +111,6 @@ bool Window::loop() {
   SDL_GL_SwapWindow(this->window);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  SDL_Event event;
-  if (SDL_PollEvent( & event)) {
-    if (event.type == SDL_QUIT) {
-      return false;
-    }
-  }
-
   return true;
 }
 

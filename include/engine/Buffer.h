@@ -43,6 +43,7 @@ namespace Engine {
 
   template<typename T>
   class Buffer : public BufferBase {
+      private:
       public:
         Buffer(int size, GLenum target = GL_ARRAY_BUFFER) {
           this->_itemSize = sizeof(T);
@@ -73,13 +74,17 @@ namespace Engine {
           this->_ptr = std::shared_ptr<void>(raw_ptr, BufferBaseDeleter(this->_target, this->_bufferId));
         }
 
-        void flush() {
+        void flush(int offsetStart, int offsetEnd) {
           if (!glBufferStorage) {
             this->_ptr.reset();
             map();
             return;
           }
-          GL::flushMappedBufferRange(this->_target, this->_bufferId, 0, this->_size * this->_itemSize);
+          GL::flushMappedBufferRange(this->_target, this->_bufferId, offsetStart, offsetEnd);
+        }
+
+        void flush() {
+          flush( 0, this->_size * this->_itemSize);
         }
         
         const T& at(int index) const {

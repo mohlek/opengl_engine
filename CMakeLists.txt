@@ -18,6 +18,9 @@ file(GLOB_RECURSE src_engine "src/*.cpp")
 find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
 
+find_package(ASSIMP REQUIRED)
+include_directories(${ASSIMP_INCLUDE_DIRS})
+
 
 if (EXAMPLES)
   include("example/window/CMakeLists.txt")
@@ -27,5 +30,6 @@ endif (EXAMPLES)
 add_library(engine STATIC ${src_engine})
 
 target_include_directories(engine INTERFACE "${PROJECT_SOURCE_DIR}/include")
+target_link_libraries(engine INTERFACE ${ASSIMP_LIBRARIES})
 target_link_libraries(engine INTERFACE SDL2::SDL2)
 target_link_libraries(engine PUBLIC framework)
