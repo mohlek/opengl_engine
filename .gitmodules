@@ -1,0 +1,6 @@
+[submodule "extern/imgui"]
+	path = extern/imgui
+	url = git@github.com:ocornut/imgui.git
+[submodule "extern/gl3w"]
+	path = extern/gl3w
+	url = git@github.com:skaslev/gl3w.git

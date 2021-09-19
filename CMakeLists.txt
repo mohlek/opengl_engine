@@ -7,10 +7,9 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/")
 
 project(engine VERSION 0.0.1 DESCRIPTION "Simple engine")
-
-add_subdirectory(framework/)
-
 file(GLOB_RECURSE src_engine "src/*.cpp")
+
+add_subdirectory(extern EXCLUDE_FROM_ALL)
 
 #########################################################
 # FIND SDL
@@ -18,6 +17,9 @@ file(GLOB_RECURSE src_engine "src/*.cpp")
 find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
 
+#########################################################
+# FIND ASSIMP
+#########################################################
 find_package(ASSIMP REQUIRED)
 include_directories(${ASSIMP_INCLUDE_DIRS})
 
@@ -27,9 +29,10 @@ if (EXAMPLES)
   include("example/shader/CMakeLists.txt")
 endif (EXAMPLES)
 
+
 add_library(engine STATIC ${src_engine})
 
 target_include_directories(engine INTERFACE "${PROJECT_SOURCE_DIR}/include")
 target_link_libraries(engine INTERFACE ${ASSIMP_LIBRARIES})
 target_link_libraries(engine INTERFACE SDL2::SDL2)
-target_link_libraries(engine PUBLIC framework)
+target_link_libraries(engine INTERFACE imgui)

@@ -4,7 +4,7 @@
 #include <memory>
 #include <GL/glew.h>
 #include <stdexcept>
-#include <framework/Buffer.h>
+#include "../framework/Buffer.h"
 
 namespace Engine {
 

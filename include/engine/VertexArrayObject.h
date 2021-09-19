@@ -5,7 +5,7 @@
 #include <vector>
 #include <memory>
 
-#include <framework/VertexArrayObject.h>
+#include "../framework/VertexArrayObject.h"
 
 #include "Buffer.h"
 #include "ExitScopeHelper.h"
