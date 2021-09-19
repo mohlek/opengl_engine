@@ -9,7 +9,6 @@ using namespace Engine;
 
 static void GlewInfo() {
   printf("----------------------OpenGL Info----------------------------\n");
-  printf("Glew Version: %s\n", glewGetString(GLEW_VERSION));
   printf("     Version: %s\n", glGetString(GL_VERSION));
   printf("      Vendor: %s\n", glGetString(GL_VENDOR));
   printf("    Renderer: %s\n", glGetString(GL_RENDERER));
@@ -36,7 +35,7 @@ void CheckGL() {
   }
 }
 
-void GLAPIENTRY MessageCallback( GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam ) {
+void MessageCallback( GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam ) {
   fprintf( stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n", ( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ), type, severity, message );
 }
 
@@ -74,8 +73,7 @@ bool Window::create() {
     return false;
   }
 
-  glewExperimental = GL_TRUE;
-  SDL_assert(glewInit() == GLEW_OK);
+  SDL_assert(gl3wInit() == GL3W_OK);
   glGetError();
 
   glEnable(GL_DEPTH_TEST);
@@ -83,20 +81,14 @@ bool Window::create() {
   GlewInfo();
   CheckGL();
 
-  if (GLEW_ARB_debug_output) {
+  if (GL_DEBUG_OUTPUT) {
     printf("Supporting Arb output\n");
     glEnable(GL_DEBUG_OUTPUT);
-    glDebugMessageCallbackARB((GLDEBUGPROCARB)DebugCallbackARB, 0);
+    glDebugMessageCallback((GLDEBUGPROC)DebugCallbackARB, 0);
     CheckGL();
   }
 
-  if (GLEW_AMD_debug_output) {
-    printf("Supporting AMD output\n");
-    glDebugMessageCallbackAMD((GLDEBUGPROCAMD)DebugCallbackAMD, 0);
-    CheckGL();
-  }
-
-  if (GLEW_KHR_debug) {
+  if (GL_KHR_debug) {
     printf("Supporting KHR output\n");
     glDebugMessageCallback((GLDEBUGPROC)printOutKhrDebugMessage, 0);
     CheckGL();

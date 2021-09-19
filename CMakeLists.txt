@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.21)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -9,7 +9,7 @@ set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/")
 project(engine VERSION 0.0.1 DESCRIPTION "Simple engine")
 file(GLOB_RECURSE src_engine "src/*.cpp")
 
-add_subdirectory(extern EXCLUDE_FROM_ALL)
+add_subdirectory(extern/)
 
 #########################################################
 # FIND SDL
@@ -32,7 +32,8 @@ endif (EXAMPLES)
 
 add_library(engine STATIC ${src_engine})
 
-target_include_directories(engine INTERFACE "${PROJECT_SOURCE_DIR}/include")
-target_link_libraries(engine INTERFACE ${ASSIMP_LIBRARIES})
-target_link_libraries(engine INTERFACE SDL2::SDL2)
-target_link_libraries(engine INTERFACE imgui)
+target_include_directories(engine PUBLIC "${PROJECT_SOURCE_DIR}/include")
+target_link_libraries(engine PUBLIC ${ASSIMP_LIBRARIES})
+target_link_libraries(engine PUBLIC SDL2::SDL2)
+target_link_libraries(engine PUBLIC gl3w)
+target_link_libraries(engine PUBLIC imgui)

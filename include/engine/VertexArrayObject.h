@@ -1,7 +1,7 @@
 #ifndef _H_VERTEXARRAYOBJECT
 #define _H_VERTEXARRAYOBJECT
 
-#include <GL/glew.h>
+#include <GL/gl3w.h>
 #include <vector>
 #include <memory>
 

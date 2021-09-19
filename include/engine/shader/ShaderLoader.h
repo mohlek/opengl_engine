@@ -1,7 +1,7 @@
 #ifndef SHADERLOADER_H
 #define SHADERLOADER_H
 
-#include <GL/glew.h>
+#include <GL/gl3w.h>
 #include <string>
 #include <memory>
 

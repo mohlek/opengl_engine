@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <memory>
 
-#include <GL/glew.h>
+#include <GL/gl3w.h>
 
 #include "stb_image.h"
 

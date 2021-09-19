@@ -1,7 +1,7 @@
 #ifndef H_VERTEXARRAYOBJECT
 #define H_VERTEXARRAYOBJECT
 
-#include <GL/glew.h>
+#include <GL/gl3w.h>
 
 namespace GL {
   void createVertexArrays(GLuint n, GLuint* buffer);

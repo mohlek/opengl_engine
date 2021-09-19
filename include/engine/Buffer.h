@@ -2,7 +2,7 @@
 #define BUFFER_H
 
 #include <memory>
-#include <GL/glew.h>
+#include <GL/gl3w.h>
 #include <stdexcept>
 #include "../framework/Buffer.h"
 

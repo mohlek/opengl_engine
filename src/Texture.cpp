@@ -1,7 +1,5 @@
 #include "../include/engine/Texture.h"
 
-#include <GL/glew.h>
-
 #define STB_IMAGE_IMPLEMENTATION
 #include "../include/engine/stb_image.h"
 

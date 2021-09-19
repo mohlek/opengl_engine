@@ -1,7 +1,7 @@
 #ifndef H_BUFFER
 #define H_BUFFER
 
-#include <GL/glew.h> 
+#include <GL/gl3w.h> 
 
 namespace GL {
   void createBuffers(GLenum target, GLsizei n, GLuint* buffers);
