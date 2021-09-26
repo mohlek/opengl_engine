@@ -88,3 +88,7 @@ void GL::bindBuffer(GLenum target, GLuint buffer) {
 void GL::unbindBuffer(GLenum target) {
   glBindBuffer(target, 0);
 }
+
+void GL::bindBufferBase(GLenum target, GLuint location, GLuint buffer) {
+  glBindBufferBase(target, location, buffer);
+}

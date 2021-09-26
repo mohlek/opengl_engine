@@ -14,6 +14,7 @@ namespace GL {
   void bufferStorage(GLenum target, GLuint buffer, GLsizeiptr size, const void* data, GLbitfield flags);
   void bindBuffer(GLenum target, GLuint buffer);
   void unbindBuffer(GLenum target);
+  void bindBufferBase(GLenum target, GLuint location, GLuint buffer);
 }
 
 #endif

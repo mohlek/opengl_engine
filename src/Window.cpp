@@ -56,6 +56,9 @@ Window::Window(const char* title, int width, int height, bool fullscreen) : titl
 
   SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
   SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+
+  SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
+  SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 8);
 }
 
 bool Window::create() {
@@ -105,6 +108,8 @@ bool Window::loop() {
 
   SDL_GL_SwapWindow(this->window);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  glEnable(GL_MULTISAMPLE);  
 
   return true;
 }

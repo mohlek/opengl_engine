@@ -1,4 +1,5 @@
 #include "../include/engine/VertexArrayObject.h"
+#include "../include/framework/Buffer.h"
 
 using namespace Engine;
 
@@ -11,6 +12,10 @@ VertexArrayObject::~VertexArrayObject() {
 }
 
 void VertexArrayObject::setBuffer(int location, BufferBase& buffer) {
+  if (buffer._target == GL_UNIFORM_BUFFER) {
+    GL::bindBufferBase(GL_UNIFORM_BUFFER, location, buffer._bufferId);
+    return;
+  }
   GL::vertexArrayAttrib(this->_vaoId, location, buffer._bufferId, buffer._itemSize, 3, buffer._dataType, buffer._target);
 }
 
