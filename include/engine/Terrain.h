@@ -59,9 +59,11 @@ namespace Engine {
 
             }
 
-            void render() {
+            void render(GLuint ubo) {
                 _program.use();
                 _vao.bind();
+
+                glBindBufferBase(GL_UNIFORM_BUFFER, 0, ubo);
 
                 glDrawElements(GL_TRIANGLES, _indexData.size() - 1, GL_UNSIGNED_INT, 0);
             }

@@ -25,6 +25,7 @@ void printProgramInfoLog(GLuint obj) {
 		glGetProgramInfoLog(obj, infologLength, &charsWritten, infoLog);
 		std::cout << infoLog << std::endl;
 		free(infoLog);
+        abort();
 	}
 }
 
