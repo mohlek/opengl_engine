@@ -24,6 +24,9 @@ namespace Engine {
             virtual ~ShaderProgram();
 
             GLint getUniformLocation(std::string&& name);
+            GLint getUniformBlockIndex(std::string&& name);
+
+            GLuint getProgramId();
 
             void link();
             void use();

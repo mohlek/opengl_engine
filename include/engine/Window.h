@@ -3,11 +3,6 @@
 
 #include <GL/gl3w.h>
 
-
-#include <imgui.h>
-#include <imgui_impl_sdl.h>
-#include <imgui_impl_opengl3.h>
-
 #ifdef __APPLE__
   #include <SDL.h>
   #include <SDL_opengl.h>
@@ -34,6 +29,14 @@ namespace Engine {
 
       int getWidth();
       int getHeight();
+
+      SDL_Window* getWindow() {
+        return this->window;
+      }
+
+      SDL_GLContext getContext() {
+        return this->context;
+      }
 
       Window(const char* title, int width, int height, bool fullscreen = false);
   };

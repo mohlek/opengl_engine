@@ -54,6 +54,10 @@ void Texture::load(const char* path) {
   stbi_image_free(data);
 }
 
+const GLuint Texture::getTextureId() {
+  return this->textureId;
+}
+
 void Texture::bind() {
   glActiveTexture(this->textureUnit);
   glBindTexture(this->target, this->textureId);

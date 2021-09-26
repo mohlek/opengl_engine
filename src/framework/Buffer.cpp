@@ -46,14 +46,14 @@ void* GL::mapBufferRange(GLenum target, GLuint buffer, GLintptr offset, GLsizeip
   return tmp;
 }
 
-void GL::unmapBuffer(GLenum target, GLuint buffer) {
+bool GL::unmapBuffer(GLenum target, GLuint buffer) {
   if (glUnmapNamedBuffer) {
-    glUnmapNamedBuffer(buffer);
-    return;
+    return glUnmapNamedBuffer(buffer);
   }
   glBindBuffer(target, buffer);
-  glUnmapBuffer(target);
+  bool result = glUnmapBuffer(target);
   glBindBuffer(target, 0);
+  return result;
 }
 
 void GL::flushMappedBufferRange(GLenum target, GLuint buffer, GLintptr offset, GLsizei length) {

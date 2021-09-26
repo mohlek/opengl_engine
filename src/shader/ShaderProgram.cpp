@@ -32,6 +32,14 @@ GLint ShaderProgram::getUniformLocation(std::string&& name) {
     return glGetUniformLocation(this->programId, name.c_str());
 }
 
+GLint ShaderProgram::getUniformBlockIndex(std::string&& name) {
+    return glGetUniformBlockIndex(this->programId, name.c_str());
+}
+
+GLuint ShaderProgram::getProgramId() {
+    return this->programId;
+}
+
 void ShaderProgram::link() {
     this->programId = glCreateProgram();
 

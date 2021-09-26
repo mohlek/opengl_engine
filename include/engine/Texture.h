@@ -24,10 +24,17 @@ namespace Engine {
 
       void load(const char* path);
       void pushData(GLint internalFormat, GLenum format, GLenum type, GLsizei width, GLsizei height, const void* data);
+
+      const GLuint getTextureId();
+      const GLint getMipmapLevel() {
+        return 0;
+      }
       
       void bind();
       void unbind();
   };
+
+  using TexturePtr = std::shared_ptr<Engine::Texture>;
 }
 
 

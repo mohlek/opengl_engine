@@ -84,7 +84,7 @@ namespace Engine {
         }
 
         void flush() {
-          flush( 0, this->_size * this->_itemSize);
+          flush(0, this->_size * this->_itemSize);
         }
         
         const T& at(int index) const {
